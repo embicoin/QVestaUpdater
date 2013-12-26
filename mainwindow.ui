@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>438</width>
+    <height>258</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/img/VestaIcon.png</normaloff>:/img/VestaIcon.png</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>30</width>
+    <height>30</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" colspan="4">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>7</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <item>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tabStatus">
+         <attribute name="title">
+          <string>Статус</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <layout class="QFormLayout" name="formLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="installedVersionLabelInfo">
+              <property name="text">
+               <string>Установленная версия:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="latestVestionLabelInfo">
+              <property name="text">
+               <string>Последняя версия:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="latestVersionLabel">
+              <property name="text">
+               <string>latestVersionLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="installedVersionLabel">
+              <property name="text">
+               <string>installedVersionLabel</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="readyToUpdateLabel">
+            <property name="text">
+             <string>readyToUpdateLabel</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="isVestaRunningLabel">
+            <property name="text">
+             <string>isVestaRunningLabel</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QPushButton" name="checkLatestVersionButton">
+              <property name="text">
+               <string>Проверить наличие новой версии</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="installLatestVersionButton">
+              <property name="text">
+               <string>Установить новую версию</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tabSettings">
+         <attribute name="title">
+          <string>Настройки</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <layout class="QFormLayout" name="formLayout_2">
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="pathToInstalerEdit"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="pathToInstalerLabel">
+              <property name="text">
+               <string>Путь к дистрибутиву в Dropbox:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="checkIntervalInfo">
+              <property name="text">
+               <string>Период проверки (минут):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="spinBox"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Автоматическая установка:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QCheckBox" name="checkBox">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tabSvn">
+         <attribute name="title">
+          <string>svn.history.txt</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <widget class="QTextBrowser" name="textBrowser"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>438</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuVestaUpdater">
+    <property name="title">
+     <string>Меню</string>
+    </property>
+    <addaction name="toggleWindowVisibilityAction"/>
+    <addaction name="checkForNewVersionAction"/>
+    <addaction name="installNewVersionAction"/>
+    <addaction name="exitAction"/>
+   </widget>
+   <addaction name="menuVestaUpdater"/>
+  </widget>
+  <action name="exitAction">
+   <property name="text">
+    <string>Выйти</string>
+   </property>
+  </action>
+  <action name="toggleWindowVisibilityAction">
+   <property name="text">
+    <string>Показать/скрыть окно программы</string>
+   </property>
+  </action>
+  <action name="checkForNewVersionAction">
+   <property name="text">
+    <string>Проверить наличие новой версии</string>
+   </property>
+  </action>
+  <action name="installNewVersionAction">
+   <property name="text">
+    <string>Установить новую версию</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>exitAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
