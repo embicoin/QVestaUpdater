@@ -1,8 +1,5 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include <QIcon>
-#include "VestaUpdater.h"
-#include "ui_mainwindow.h"
 
 int main(int argc, char *argv[])
 {

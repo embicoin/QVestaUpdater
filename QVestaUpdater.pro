@@ -8,18 +8,18 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = VestaUpdater
+TARGET = QVestaUpdater
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    VestaUpdater.cpp \
-    QVestaUpdaterTrayIcon.cpp
+    QVestaUpdaterTrayIcon.cpp \
+    QVestaUpdater.cpp
 
 HEADERS  += mainwindow.h \
-    VestaUpdater.h \
-    QVestaUpdaterTrayIcon.h
+    QVestaUpdaterTrayIcon.h \
+    QVestaUpdater.h
 
 FORMS    += mainwindow.ui
 

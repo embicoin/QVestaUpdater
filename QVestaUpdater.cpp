@@ -1,4 +1,4 @@
-#include "VestaUpdater.h"
+#include "QVestaUpdater.h"
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QFile>
@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <QProcess>
 
-VestaUpdater::VestaUpdater()
+QVestaUpdater::QVestaUpdater()
 {
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()),
@@ -17,17 +17,17 @@ VestaUpdater::VestaUpdater()
     startTimer();
 }
 
-void VestaUpdater::startTimer()
+void QVestaUpdater::startTimer()
 { timer->start(60 * 1000); }
 
-void VestaUpdater::stopTimer()
+void QVestaUpdater::stopTimer()
 { timer->stop(); }
 
-bool VestaUpdater::needToUpdate() {
+bool QVestaUpdater::needToUpdate() {
     return getLatestVersion() > getInstalledVersion().addSecs(60);
 }
 
-void VestaUpdater::checkLatestVersionInDropbox() {
+void QVestaUpdater::checkLatestVersionInDropbox() {
     //QFileInfo fileInfo("C:/Users/1/Dropbox/VestaLite (2)/VestaDizLite.zip");
     QFileInfo fileInfo("C:/Temp/VestaDizLite.zip");
     QDateTime dropboxVersion = fileInfo.lastModified();
@@ -36,7 +36,7 @@ void VestaUpdater::checkLatestVersionInDropbox() {
     }
 }
 
-bool VestaUpdater::installLatestVersion() {
+bool QVestaUpdater::installLatestVersion() {
     // Вызываем скрипт, который должен
     //   создать папку VestaDizLite в каталоге приложения,
     //   разархивировать туда архив VestaDizLite.zip из Dropbox,
@@ -49,7 +49,7 @@ bool VestaUpdater::installLatestVersion() {
     return true;
 }
 
-bool VestaUpdater::installLatestVersionIfReady() {
+bool QVestaUpdater::installLatestVersionIfReady() {
     checkLatestVersionInDropbox();
     if(!needToUpdate()) {
         return false;
@@ -59,7 +59,7 @@ bool VestaUpdater::installLatestVersionIfReady() {
 }
 
 // ----------------------- Serialization ---------------------------------
-bool VestaUpdater::serialize() {
+bool QVestaUpdater::serialize() {
     QFile file("settings.dat");
     if(!file.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
@@ -75,7 +75,7 @@ bool VestaUpdater::serialize() {
     return true;
 }
 
-bool VestaUpdater::deserialize() {
+bool QVestaUpdater::deserialize() {
     QFile file("settings.dat");
     if(!file.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open settings file.");
@@ -94,26 +94,26 @@ bool VestaUpdater::deserialize() {
 }
 
 //-------------- Setters and Getters below -------------------------------
-void VestaUpdater::setPathToVestaInstaller(QString path)
+void QVestaUpdater::setPathToVestaInstaller(QString path)
 { pathToVestaInstaller = path; }
 
-void VestaUpdater::setLatestVersion(QDateTime dateTime) {
+void QVestaUpdater::setLatestVersion(QDateTime dateTime) {
     latestVersion = dateTime;
     emit latestVersionUpdated(dateTime);
     emit latestVersionUpdated(dateTime.toString("dd.MM.yyyy hh:mm"));
 }
 
-void VestaUpdater::setInstalledVersion(QDateTime dateTime) {
+void QVestaUpdater::setInstalledVersion(QDateTime dateTime) {
     installedVersion = dateTime;
     emit installedVersionUpdated(dateTime);
     emit installedVersionUpdated(dateTime.toString("dd.MM.yyyy hh:mm"));
 }
 
-QString VestaUpdater::getPathToVestaInstaller()
+QString QVestaUpdater::getPathToVestaInstaller()
 { return pathToVestaInstaller; }
 
-QDateTime VestaUpdater::getLatestVersion()
+QDateTime QVestaUpdater::getLatestVersion()
 { return latestVersion; }
 
-QDateTime VestaUpdater::getInstalledVersion()
+QDateTime QVestaUpdater::getInstalledVersion()
 { return installedVersion; }

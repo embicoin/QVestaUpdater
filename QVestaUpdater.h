@@ -1,12 +1,12 @@
-#ifndef VESTAUPDATER_H
-#define VESTAUPDATER_H
+#ifndef QVESTAUPDATER_H
+#define QVESTAUPDATER_H
 
 #include <QObject>
 #include <QString>
 #include <QDateTime>
 #include <QTimer>
 
-class VestaUpdater : public QObject
+class QVestaUpdater : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString pathToVestaInstaller
@@ -22,7 +22,7 @@ class VestaUpdater : public QObject
         WRITE  setInstalledVersion
         STORED true)
 public:
-    VestaUpdater();
+    QVestaUpdater();
     QString   getPathToVestaInstaller();
     QDateTime getLatestVersion();
     QDateTime getInstalledVersion();
@@ -55,4 +55,4 @@ private:
     QDateTime installedVersion;
 };
 
-#endif // VESTAUPDATER_H
+#endif // QVESTAUPDATER_H

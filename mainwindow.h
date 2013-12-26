@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 #include <QIcon>
-#include "VestaUpdater.h"
+#include "QVestaUpdater.h"
 #include "QVestaUpdaterTrayIcon.h"
 
 namespace Ui {
@@ -27,7 +27,7 @@ private:
     void performConnections();
 
     Ui::MainWindow *ui;
-    VestaUpdater vu;
+    QVestaUpdater vu;
     QVestaUpdaterTrayIcon *trayIcon;
     QIcon *vestaIcon;
 };
