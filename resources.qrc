@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>VestaIcon.png</file>
+        <file>VestaIconUpdateReady.png</file>
+    </qresource>
+</RCC>
