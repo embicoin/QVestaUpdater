@@ -42,14 +42,17 @@ public slots:
     bool deserialize();
     bool needToUpdate();
 signals:
+    void installProcessStarted();
+    void installProcessFinished();
     void latestVersionUpdated(QDateTime);
     void latestVersionUpdated(QString);
     void installedVersionUpdated(QDateTime);
     void installedVersionUpdated(QString);
 
 private:
-    QTimer *timer;
     bool installLatestVersion();
+
+    QTimer *timer;
     QString   pathToVestaInstaller;
     QDateTime latestVersion;
     QDateTime installedVersion;

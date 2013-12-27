@@ -8,6 +8,7 @@
 #include <QVariant>
 #include <QDebug>
 #include <QProcess>
+#include <QtConcurrent/QtConcurrentRun>
 
 QVestaUpdater::QVestaUpdater()
 {
@@ -39,11 +40,14 @@ void QVestaUpdater::checkLatestVersionInDropbox() {
 bool QVestaUpdater::installLatestVersion() {
     // Вызываем скрипт, который должен
     //   создать папку VestaDizLite в каталоге приложения,
-    //   разархивировать туда архив VestaDizLite.zip из Dropbox,
-    //   запустиь инсталлятор в silent режиме.
-    QProcess *unzipScript = new QProcess(this);
+    //   разархивировать туда архив VestaDizLite.zip из Dropbox.
+    QProcess unzipScript;
     QString unzipCommand = "VestaDizLiteCopyAndUnzip.bat";
-    unzipScript->start(unzipCommand);
+
+    emit installProcessStarted();
+    unzipScript.start(unzipCommand);
+    unzipScript.waitForFinished();
+    emit installProcessFinished();
 
     setInstalledVersion(getLatestVersion());
     return true;
@@ -54,7 +58,7 @@ bool QVestaUpdater::installLatestVersionIfReady() {
     if(!needToUpdate()) {
         return false;
     }
-    installLatestVersion();
+    QtConcurrent::run(this, &QVestaUpdater::installLatestVersion );
     return true;
 }
 
