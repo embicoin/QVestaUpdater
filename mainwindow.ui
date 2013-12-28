@@ -88,7 +88,7 @@
            </layout>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="readyToUpdateLabel">
+           <widget class="QLabel" name="statusLabel">
             <property name="text">
              <string>readyToUpdateLabel</string>
             </property>
@@ -112,14 +112,7 @@
             <item>
              <widget class="QPushButton" name="checkLatestVersionButton">
               <property name="text">
-               <string>Проверить наличие новой версии</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="installLatestVersionButton">
-              <property name="text">
-               <string>Установить новую версию</string>
+               <string>Проверить текущее состояние</string>
               </property>
              </widget>
             </item>
@@ -203,7 +196,6 @@
     </property>
     <addaction name="toggleWindowVisibilityAction"/>
     <addaction name="checkForNewVersionAction"/>
-    <addaction name="installNewVersionAction"/>
     <addaction name="exitAction"/>
    </widget>
    <addaction name="menuVestaUpdater"/>
@@ -220,7 +212,7 @@
   </action>
   <action name="checkForNewVersionAction">
    <property name="text">
-    <string>Проверить наличие новой версии</string>
+    <string>Проверить текущее состояние</string>
    </property>
   </action>
   <action name="installNewVersionAction">
