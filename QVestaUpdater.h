@@ -42,13 +42,13 @@ public slots:
 
 signals:
 // Used by machine:
-    void upToDate        (QDateTime version);
-    void updateReady     (QDateTime newVersion);
+    void upToDate        (QDateTime version         );
+    void updateReady     (QDateTime newVersion      );
     void installStarted  (QDateTime installedVersion);
     void installFinished (QDateTime installedVersion);
-    void waitVestaExit();
-    void vestaRunning();
-    void vestaNotRunning();
+    void waitVestaExit   (                          );
+    void vestaRunning    (                          );
+    void vestaNotRunning (                          );
 
 private:
     QStateMachine machine;
@@ -64,6 +64,7 @@ private slots:
     void checkVestaRunning();
     void doInstall();
     void installLatestVersionThread();
+    void onUpToDate();
     QDateTime checkLatestVersionInDropbox();
 };
 

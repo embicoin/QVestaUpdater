@@ -20,8 +20,15 @@ public:
     ~MainWindow();
 
 private slots:
-    void fillReadyToUpdateLabel();
     void toggleVisibility();
+
+    void initInterface();
+    void onUpToDate();
+    void onUpdateReady();
+    void onWaitVestaExit();
+    void onInstallStarted();
+    void onVestaRunning();
+    void onVestaNotRunning();
 
 private:
     void performConnections();

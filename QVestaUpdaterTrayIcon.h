@@ -16,8 +16,10 @@ signals:
 
 public slots:
     void setMenu(QMenu*);
-    void showNewVersionReleased(QDateTime);
-    void showNewVersionInstalled(QDateTime);
+    void onUpToDate(QDateTime);
+    void onInstallStarted(QDateTime);
+    void onInstallFinished(QDateTime);
+    void onWaitVestaExit();
 
 private:
     QSystemTrayIcon *trayIcon;

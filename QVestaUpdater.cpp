@@ -36,12 +36,12 @@ void QVestaUpdater::setupMachine() {
                           SIGNAL(updateReady    (QDateTime)), sUpdateReady  );
     sUpToDate    ->addTransition(this,
                           SIGNAL(updateReady    (QDateTime)), sUpdateReady  );
-    sInstallBegin->addTransition(this,
-                          SIGNAL(installFinished(QDateTime)), sUpToDate     );
     sUpdateReady ->addTransition(this,
                           SIGNAL(vestaRunning            ()), sWaitVestaExit);
     sUpdateReady ->addTransition(this,
                           SIGNAL(vestaNotRunning         ()), sInstallBegin );
+    sInstallBegin->addTransition(this,
+                          SIGNAL(installFinished(QDateTime)), sUpToDate     );
 
     QObject::connect(
         sInitialCheck, SIGNAL(entered()), this, SLOT(checkStatus      ()));
@@ -50,7 +50,7 @@ void QVestaUpdater::setupMachine() {
     QObject::connect(
         sInstallBegin, SIGNAL(entered()), this, SLOT(doInstall        ()));
     QObject::connect(
-        sUpToDate,     SIGNAL(entered()), this, SLOT(startTimer       ()));
+        sUpToDate,     SIGNAL(entered()), this, SLOT(onUpToDate       ()));
     QObject::connect(
         sWaitVestaExit,SIGNAL(entered()), this, SIGNAL(waitVestaExit  ()));
 
@@ -72,6 +72,12 @@ void QVestaUpdater::checkStatus() {
     } else {
         emit upToDate(getLatestVersion());
     }
+    checkVestaRunning();
+}
+
+void QVestaUpdater::onUpToDate() {
+    checkStatus();
+    startTimer();
 }
 
 void QVestaUpdater::checkVestaRunning() {
