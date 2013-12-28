@@ -9,13 +9,93 @@
 #include <QDebug>
 #include <QProcess>
 #include <QtConcurrent/QtConcurrentRun>
+#include <QStateMachine>
+#include <QState>
 
-QVestaUpdater::QVestaUpdater()
-{
+QVestaUpdater::QVestaUpdater() {
+    deserialize();
+    setupMachine();
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),
-            this, SLOT(installLatestVersionIfReady()) );
-    startTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(checkStatus()) );
+}
+
+QVestaUpdater::~QVestaUpdater() {
+    serialize();
+}
+
+void QVestaUpdater::setupMachine() {
+    QState *sInitialCheck = new QState();
+    QState *sUpToDate     = new QState();
+    QState *sUpdateReady  = new QState();
+    QState *sWaitVestaExit= new QState();
+    QState *sInstallBegin = new QState();
+
+    sInitialCheck->addTransition(this,
+                          SIGNAL(upToDate       (QDateTime)), sUpToDate     );
+    sInitialCheck->addTransition(this,
+                          SIGNAL(updateReady    (QDateTime)), sUpdateReady  );
+    sUpToDate    ->addTransition(this,
+                          SIGNAL(updateReady    (QDateTime)), sUpdateReady  );
+    sInstallBegin->addTransition(this,
+                          SIGNAL(installFinished(QDateTime)), sUpToDate     );
+    sUpdateReady ->addTransition(this,
+                          SIGNAL(vestaRunning            ()), sWaitVestaExit);
+    sUpdateReady ->addTransition(this,
+                          SIGNAL(vestaNotRunning         ()), sInstallBegin );
+
+    QObject::connect(
+        sInitialCheck, SIGNAL(entered()), this, SLOT(checkStatus      ()));
+    QObject::connect(
+        sUpdateReady,  SIGNAL(entered()), this, SLOT(checkVestaRunning()));
+    QObject::connect(
+        sInstallBegin, SIGNAL(entered()), this, SLOT(doInstall        ()));
+    QObject::connect(
+        sUpToDate,     SIGNAL(entered()), this, SLOT(startTimer       ()));
+    QObject::connect(
+        sWaitVestaExit,SIGNAL(entered()), this, SIGNAL(waitVestaExit  ()));
+
+    machine.addState(sInitialCheck );
+    machine.addState(sUpToDate     );
+    machine.addState(sUpdateReady  );
+    machine.addState(sWaitVestaExit);
+    machine.addState(sInstallBegin );
+
+    machine.setInitialState(sInitialCheck);
+    machine.start();
+}
+
+void QVestaUpdater::checkStatus() {
+    QDateTime dropboxVersion = checkLatestVersionInDropbox();
+    if ( dropboxVersion > getLatestVersion().addSecs(60) ) {
+        setLatestVersion(dropboxVersion);
+        emit updateReady(dropboxVersion);
+    } else {
+        emit upToDate(getLatestVersion());
+    }
+}
+
+void QVestaUpdater::checkVestaRunning() {
+    // ToDo: реализовать проверку.
+    emit vestaNotRunning();
+}
+
+void QVestaUpdater::doInstall() {
+    stopTimer();
+    QtConcurrent::run(this, &QVestaUpdater::installLatestVersionThread);
+}
+
+//----------------------------- Helpers ---------------------------------------
+void QVestaUpdater::installLatestVersionThread() {
+    emit installStarted(getLatestVersion());
+    // Вызываем скрипт, который должен
+    //   создать папку VestaDizLite в каталоге приложения,
+    //   разархивировать туда архив VestaDizLite.zip из Dropbox
+    QProcess unzipScript;
+    QString unzipCommand = "VestaDizLiteCopyAndUnzip.bat";
+    unzipScript.start(unzipCommand);
+    unzipScript.waitForFinished();
+    setInstalledVersion(getLatestVersion());
+    emit installFinished(getInstalledVersion());
 }
 
 void QVestaUpdater::startTimer()
@@ -24,42 +104,10 @@ void QVestaUpdater::startTimer()
 void QVestaUpdater::stopTimer()
 { timer->stop(); }
 
-bool QVestaUpdater::needToUpdate() {
-    return getLatestVersion() > getInstalledVersion().addSecs(60);
-}
-
-void QVestaUpdater::checkLatestVersionInDropbox() {
+QDateTime QVestaUpdater::checkLatestVersionInDropbox() {
     //QFileInfo fileInfo("C:/Users/1/Dropbox/VestaLite (2)/VestaDizLite.zip");
     QFileInfo fileInfo("C:/Temp/VestaDizLite.zip");
-    QDateTime dropboxVersion = fileInfo.lastModified();
-    if (dropboxVersion > getLatestVersion()) {
-        setLatestVersion(dropboxVersion);
-    }
-}
-
-bool QVestaUpdater::installLatestVersion() {
-    // Вызываем скрипт, который должен
-    //   создать папку VestaDizLite в каталоге приложения,
-    //   разархивировать туда архив VestaDizLite.zip из Dropbox.
-    QProcess unzipScript;
-    QString unzipCommand = "VestaDizLiteCopyAndUnzip.bat";
-
-    emit installProcessStarted();
-    unzipScript.start(unzipCommand);
-    unzipScript.waitForFinished();
-    emit installProcessFinished();
-
-    setInstalledVersion(getLatestVersion());
-    return true;
-}
-
-bool QVestaUpdater::installLatestVersionIfReady() {
-    checkLatestVersionInDropbox();
-    if(!needToUpdate()) {
-        return false;
-    }
-    QtConcurrent::run(this, &QVestaUpdater::installLatestVersion );
-    return true;
+    return fileInfo.lastModified();
 }
 
 // ----------------------- Serialization ---------------------------------
@@ -101,17 +149,11 @@ bool QVestaUpdater::deserialize() {
 void QVestaUpdater::setPathToVestaInstaller(QString path)
 { pathToVestaInstaller = path; }
 
-void QVestaUpdater::setLatestVersion(QDateTime dateTime) {
-    latestVersion = dateTime;
-    emit latestVersionUpdated(dateTime);
-    emit latestVersionUpdated(dateTime.toString("dd.MM.yyyy hh:mm"));
-}
+void QVestaUpdater::setLatestVersion(QDateTime dateTime)
+{ latestVersion = dateTime; }
 
-void QVestaUpdater::setInstalledVersion(QDateTime dateTime) {
-    installedVersion = dateTime;
-    emit installedVersionUpdated(dateTime);
-    emit installedVersionUpdated(dateTime.toString("dd.MM.yyyy hh:mm"));
-}
+void QVestaUpdater::setInstalledVersion(QDateTime dateTime)
+{ installedVersion = dateTime; }
 
 QString QVestaUpdater::getPathToVestaInstaller()
 { return pathToVestaInstaller; }

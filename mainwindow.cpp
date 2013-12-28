@@ -26,24 +26,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::performConnections() {
     //---------------------- Меню --------------------------------
-    QObject::connect(ui->exitAction, SIGNAL(triggered()),
-                     this, SLOT(close()) );
-    QObject::connect(ui->toggleWindowVisibilityAction, SIGNAL(triggered()),
-                     this, SLOT(toggleVisibility()) );
-    QObject::connect(ui->checkForNewVersionAction, SIGNAL(triggered()),
-                     &vu, SLOT(checkLatestVersionInDropbox()) );
-    QObject::connect(ui->installNewVersionAction, SIGNAL(triggered()),
-                     &vu, SLOT(installLatestVersionIfReady() ));
+    //QObject::connect(ui->exitAction, SIGNAL(triggered()),
+    //                 this, SLOT(close()) );
+    //QObject::connect(ui->toggleWindowVisibilityAction, SIGNAL(triggered()),
+    //                 this, SLOT(toggleVisibility()) );
+    //QObject::connect(ui->checkForNewVersionAction, SIGNAL(triggered()),
+    //                 &vu, SLOT(checkLatestVersionInDropbox()) );
+    //QObject::connect(ui->installNewVersionAction, SIGNAL(triggered()),
+    //                 &vu, SLOT(installLatestVersionIfReady() ));
 
 
     //---------------------- Кнопки ------------------------------
-    QObject::connect(ui->checkLatestVersionButton, SIGNAL(clicked()),
-                     &vu, SLOT(checkLatestVersionInDropbox()) );
-    QObject::connect(ui->installLatestVersionButton, SIGNAL(clicked()),
-                     &vu, SLOT(installLatestVersionIfReady()) );
+    //QObject::connect(ui->checkLatestVersionButton, SIGNAL(clicked()),
+    //                 &vu, SLOT(checkLatestVersionInDropbox()) );
+    //QObject::connect(ui->installLatestVersionButton, SIGNAL(clicked()),
+    //                 &vu, SLOT(installLatestVersionIfReady()) );
 
     //---------------------- Метки -------------------------------
-    QObject::connect(&vu, SIGNAL(latestVersionUpdated(QString)),
+    /*QObject::connect(&vu, SIGNAL(latestVersionUpdated(QString)),
                     ui->latestVersionLabel, SLOT(setText(QString)) );
     QObject::connect(&vu, SIGNAL(installedVersionUpdated(QString)),
                      ui->installedVersionLabel, SLOT(setText(QString)) );
@@ -57,6 +57,7 @@ void MainWindow::performConnections() {
                      trayIcon, SLOT(showNewVersionReleased(QDateTime)) );
     QObject::connect(&vu, SIGNAL(installedVersionUpdated(QDateTime)),
                      trayIcon, SLOT(showNewVersionInstalled(QDateTime)) );
+    */
 
 
     /*QObject::connect(ui->pathToInstalerEdit, &(QLineEdit::textEdited),
@@ -74,11 +75,11 @@ void MainWindow::toggleVisibility() {
 }
 
 void MainWindow::fillReadyToUpdateLabel() {
-    ui->readyToUpdateLabel->setText(
+/*    ui->readyToUpdateLabel->setText(
         vu.needToUpdate() ?
             "<p style=\"color:red\">Есть обновление!</p>" :
             "<p style=\"color:green\">Уставновлена последняя версия</p>"
-    );
+    );*/
 }
 
 MainWindow::~MainWindow()
