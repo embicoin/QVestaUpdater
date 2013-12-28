@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QTimer>
+#include <QStateMachine>
 
 class QVestaUpdater : public QObject
 {
@@ -23,36 +24,48 @@ class QVestaUpdater : public QObject
         STORED true)
 public:
     QVestaUpdater();
+    virtual ~QVestaUpdater();
     QString   getPathToVestaInstaller();
     QDateTime getLatestVersion();
     QDateTime getInstalledVersion();
 
 public slots:
+    bool serialize();
+    bool deserialize();
+
     void startTimer();
     void stopTimer();
-
-    void checkLatestVersionInDropbox();    
-    bool installLatestVersionIfReady();
 
     void setPathToVestaInstaller(QString);
     void setLatestVersion(QDateTime);
     void setInstalledVersion(QDateTime);
 
-    bool serialize();
-    bool deserialize();
-    bool needToUpdate();
 signals:
-    void latestVersionUpdated(QDateTime);
-    void latestVersionUpdated(QString);
-    void installedVersionUpdated(QDateTime);
-    void installedVersionUpdated(QString);
+// Used by machine:
+    void upToDate        (QDateTime version         );
+    void updateReady     (QDateTime newVersion      );
+    void installStarted  (QDateTime installedVersion);
+    void installFinished (QDateTime installedVersion);
+    void waitVestaExit   (                          );
+    void vestaRunning    (                          );
+    void vestaNotRunning (                          );
 
 private:
-    QTimer *timer;
-    bool installLatestVersion();
+    QStateMachine machine;
+
+    QTimer   *timer;
     QString   pathToVestaInstaller;
     QDateTime latestVersion;
     QDateTime installedVersion;
+
+private slots:
+    void setupMachine();
+    void checkStatus();
+    void checkVestaRunning();
+    void doInstall();
+    void installLatestVersionThread();
+    void onUpToDate();
+    QDateTime checkLatestVersionInDropbox();
 };
 
 #endif // QVESTAUPDATER_H
