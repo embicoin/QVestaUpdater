@@ -66,11 +66,11 @@ void QVestaUpdater::setupMachine() {
 
 void QVestaUpdater::checkStatus() {
     QDateTime dropboxVersion = checkLatestVersionInDropbox();
-    if ( dropboxVersion > getLatestVersion().addSecs(60) ) {
+    if ( dropboxVersion > getInstalledVersion().addSecs(60) ) {
         setLatestVersion(dropboxVersion);
         emit updateReady(dropboxVersion);
     } else {
-        emit upToDate(getLatestVersion());
+        emit upToDate(getInstalledVersion());
     }
     checkVestaRunning();
 }
@@ -81,8 +81,25 @@ void QVestaUpdater::onUpToDate() {
 }
 
 void QVestaUpdater::checkVestaRunning() {
-    // ToDo: реализовать проверку.
-    emit vestaNotRunning();
+    QtConcurrent::run(this,
+                      &QVestaUpdater::checkVestaRunningWithTasklist );
+}
+
+void QVestaUpdater::checkVestaRunningWithTasklist() {
+    const QString vestaProcessName = "Vesta.exe";
+    QProcess tasklist;
+    tasklist.start(
+        "tasklist",
+        QStringList()<< "/NH"          // без заголовка
+                     << "/FO" << "CSV" // в формате CSV
+                     << "/FI"          // с фильтром по названию
+                     << QString("IMAGENAME eq %1").arg(vestaProcessName));
+    tasklist.waitForFinished();
+    QString output = tasklist.readAllStandardOutput();
+    bool isRunning =
+            output.startsWith(QString("\"%1").arg(vestaProcessName));
+    if(isRunning) { emit vestaRunning();    }
+    else          { emit vestaNotRunning(); }
 }
 
 void QVestaUpdater::doInstall() {

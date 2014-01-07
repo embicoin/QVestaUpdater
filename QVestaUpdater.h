@@ -58,6 +58,8 @@ private:
     QDateTime latestVersion;
     QDateTime installedVersion;
 
+    void checkVestaRunningWithTasklist();
+
 private slots:
     void setupMachine();
     void checkStatus();
