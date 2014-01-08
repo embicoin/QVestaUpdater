@@ -32,6 +32,7 @@ private slots:
 
 private:
     void performConnections();
+    const QString kDateTimeFormat;
 
     Ui::MainWindow *ui;
     QVestaUpdater vu;

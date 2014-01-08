@@ -22,6 +22,7 @@ public slots:
     void onWaitVestaExit();
 
 private:
+    const QString kDateFormat;
     QSystemTrayIcon *trayIcon;
     void setIconUpToDate();
     void setIconWaitForUpdate();

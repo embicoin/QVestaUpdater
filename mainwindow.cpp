@@ -11,10 +11,11 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    kDateTimeFormat("dd.MM, hh:mm"),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);    
-    setWindowTitle("QVestaUpdater v0.1");
+    setWindowTitle("QVestaUpdater v0.2");
 
     trayIcon = new QVestaUpdaterTrayIcon(this);
     trayIcon->setMenu(ui->menuVestaUpdater);
@@ -37,28 +38,28 @@ void MainWindow::performConnections() {
                      &vu, SLOT(checkStatus()) );
 
     //---------------------- Иконка в трее -----------------------
-    QObject::connect(&vu,       SIGNAL(upToDate         (QDateTime)),
-                     trayIcon,  SLOT  (onUpToDate       (QDateTime))    );
-    QObject::connect(&vu,       SIGNAL(installStarted   (QDateTime)),
-                     trayIcon,  SLOT  (onInstallStarted (QDateTime))    );
-    QObject::connect(&vu,       SIGNAL(installFinished  (QDateTime)),
-                     trayIcon,  SLOT  (onInstallFinished(QDateTime))    );
-    QObject::connect(&vu,       SIGNAL(waitVestaExit    (         )),
-                     trayIcon,  SLOT  (onWaitVestaExit  (         ))    );
+    QObject::connect(&vu,       SIGNAL(enterUpToDate     (QDateTime)),
+                     trayIcon,  SLOT  (onUpToDate        (QDateTime))    );
+    QObject::connect(&vu,       SIGNAL(enterInstallBegin (QDateTime)),
+                     trayIcon,  SLOT  (onInstallStarted  (QDateTime))    );
+    QObject::connect(&vu,       SIGNAL(installFinished   (QDateTime)),
+                     trayIcon,  SLOT  (onInstallFinished (QDateTime))    );
+    QObject::connect(&vu,       SIGNAL(enterWaitVestaExit(         )),
+                     trayIcon,  SLOT  (onWaitVestaExit   (         ))    );
 
     //----------------- Обработка сигналов QVestaUpdater --------------------
-    QObject::connect(&vu,       SIGNAL(upToDate         (QDateTime)),
-                     this,      SLOT  (onUpToDate       (         ))    );
-    QObject::connect(&vu,       SIGNAL(updateReady      (QDateTime)),
-                     this,      SLOT  (onUpdateReady    (         ))    );
-    QObject::connect(&vu,       SIGNAL(installStarted   (QDateTime)),
-                     this,      SLOT  (onInstallStarted (         ))    );
-    QObject::connect(&vu,       SIGNAL(waitVestaExit    (         )),
-                     this,      SLOT  (onWaitVestaExit  (         ))    );
-    QObject::connect(&vu,       SIGNAL(vestaRunning     (         )),
-                     this,      SLOT  (onVestaRunning   (         ))    );
-    QObject::connect(&vu,       SIGNAL(vestaNotRunning  (         )),
-                     this,      SLOT  (onVestaNotRunning(         ))    );
+    QObject::connect(&vu,       SIGNAL(enterUpToDate     (QDateTime)),
+                     this,      SLOT  (onUpToDate        (         ))    );
+    QObject::connect(&vu,       SIGNAL(enterUpdateReady  (QDateTime)),
+                     this,      SLOT  (onUpdateReady     (         ))    );
+    QObject::connect(&vu,       SIGNAL(enterInstallBegin (QDateTime)),
+                     this,      SLOT  (onInstallStarted  (         ))    );
+    QObject::connect(&vu,       SIGNAL(enterWaitVestaExit(         )),
+                     this,      SLOT  (onWaitVestaExit   (         ))    );
+    QObject::connect(&vu,       SIGNAL(vestaRunning      (         )),
+                     this,      SLOT  (onVestaRunning    (         ))    );
+    QObject::connect(&vu,       SIGNAL(vestaNotRunning   (         )),
+                     this,      SLOT  (onVestaNotRunning (         ))    );
 
     //----------------------- Настройки --------------------------
     /*QObject::connect(ui->pathToInstalerEdit, &(QLineEdit::textEdited),
@@ -72,18 +73,22 @@ void MainWindow::toggleVisibility() {
 }
 
 void MainWindow::initInterface() {
-    ui->installedVersionLabel->setText(vu.getInstalledVersion().toString());
-    ui->latestVersionLabel->setText(vu.getLatestVersion().toString());
+    ui->installedVersionLabel->setText(
+                vu.getInstalledVersion().toString(kDateTimeFormat));
+    ui->latestVersionLabel->setText(
+                vu.getLatestVersion().toString(kDateTimeFormat));
 }
 
 void MainWindow::onUpToDate() {
-    ui->installedVersionLabel->setText(vu.getInstalledVersion().toString());
+    ui->installedVersionLabel->setText(
+                vu.getInstalledVersion().toString(kDateTimeFormat));
     ui->statusLabel->setText(
                 "<p style=\"color:green\">Установлена последняя версия</p>");
 }
 
 void MainWindow::onUpdateReady() {
-    ui->latestVersionLabel->setText(vu.getLatestVersion().toString());
+    ui->latestVersionLabel->setText(
+                vu.getLatestVersion().toString(kDateTimeFormat));
     ui->statusLabel->setText(
                 "<p style=\"color:orange\">Доступно обновление</p>");
 }
