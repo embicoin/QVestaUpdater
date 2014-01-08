@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);    
-    setWindowTitle("QVestaUpdater v0.1");
+    setWindowTitle("QVestaUpdater v0.2");
 
     trayIcon = new QVestaUpdaterTrayIcon(this);
     trayIcon->setMenu(ui->menuVestaUpdater);
