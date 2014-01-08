@@ -49,6 +49,12 @@ signals:
     void waitVestaExit   (                          );
     void vestaRunning    (                          );
     void vestaNotRunning (                          );
+// on state enter:
+    void enterInitialCheck  (                          );
+    void enterUpToDate      (QDateTime version         );
+    void enterUpdateReady   (QDateTime newVersion      );
+    void enterInstallBegin  (QDateTime installedVersion);
+    void enterWaitVestaExit (                          );
 
 private:
     QStateMachine machine;
@@ -61,12 +67,18 @@ private:
     void checkVestaRunningWithTasklist();
 
 private slots:
+// state enter handlers:
+    void onEnterInitialCheck  ();
+    void onEnterUpToDate      ();
+    void onEnterUpdateReady   ();
+    void onEnterInstallBegin  ();
+    void onEnterWaitVestaExit ();
+
     void setupMachine();
     void checkStatus();
     void checkVestaRunning();
     void doInstall();
     void installLatestVersionThread();
-    void onUpToDate();
     QDateTime checkLatestVersionInDropbox();
 };
 
