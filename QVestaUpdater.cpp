@@ -23,6 +23,7 @@ QVestaUpdater::~QVestaUpdater() {
     serialize();
 }
 
+//------------------------- StateMachine stuff ------------------------------
 void QVestaUpdater::setupMachine() {
     QState *sInitialCheck = new QState();
     QState *sUpToDate     = new QState();
@@ -31,28 +32,30 @@ void QVestaUpdater::setupMachine() {
     QState *sInstallBegin = new QState();
 
     sInitialCheck->addTransition(this,
-                          SIGNAL(upToDate       (QDateTime)), sUpToDate     );
+        SIGNAL(upToDate       (QDateTime)), sUpToDate     );
     sInitialCheck->addTransition(this,
-                          SIGNAL(updateReady    (QDateTime)), sUpdateReady  );
+        SIGNAL(updateReady    (QDateTime)), sUpdateReady  );
     sUpToDate    ->addTransition(this,
-                          SIGNAL(updateReady    (QDateTime)), sUpdateReady  );
+        SIGNAL(updateReady    (QDateTime)), sUpdateReady  );
     sUpdateReady ->addTransition(this,
-                          SIGNAL(vestaRunning            ()), sWaitVestaExit);
+        SIGNAL(vestaRunning            ()), sWaitVestaExit);
     sUpdateReady ->addTransition(this,
-                          SIGNAL(vestaNotRunning         ()), sInstallBegin );
+        SIGNAL(vestaNotRunning         ()), sInstallBegin );
     sInstallBegin->addTransition(this,
-                          SIGNAL(installFinished(QDateTime)), sUpToDate     );
+        SIGNAL(installFinished(QDateTime)), sUpToDate     );
+    sWaitVestaExit->addTransition(this,
+        SIGNAL(vestaNotRunning         ()), sInstallBegin );
 
     QObject::connect(
-        sInitialCheck, SIGNAL(entered()), this, SLOT(checkStatus      ()));
+        sInitialCheck, SIGNAL(entered()), this, SLOT(onEnterInitialCheck()));
     QObject::connect(
-        sUpdateReady,  SIGNAL(entered()), this, SLOT(checkVestaRunning()));
+        sUpToDate,     SIGNAL(entered()), this, SLOT(onEnterUpToDate    ()));
     QObject::connect(
-        sInstallBegin, SIGNAL(entered()), this, SLOT(doInstall        ()));
+        sUpdateReady,  SIGNAL(entered()), this, SLOT(onEnterUpdateReady ()));
     QObject::connect(
-        sUpToDate,     SIGNAL(entered()), this, SLOT(onUpToDate       ()));
+        sInstallBegin, SIGNAL(entered()), this, SLOT(onEnterInstallBegin()));
     QObject::connect(
-        sWaitVestaExit,SIGNAL(entered()), this, SIGNAL(waitVestaExit  ()));
+        sWaitVestaExit,SIGNAL(entered()), this, SLOT(onEnterWaitVestaExit()));
 
     machine.addState(sInitialCheck );
     machine.addState(sUpToDate     );
@@ -64,6 +67,28 @@ void QVestaUpdater::setupMachine() {
     machine.start();
 }
 
+void QVestaUpdater::onEnterInitialCheck() {
+    emit enterInitialCheck();
+    checkStatus();
+}
+void QVestaUpdater::onEnterUpToDate() {
+    emit enterUpToDate(getInstalledVersion());
+    checkStatus();
+    startTimer();
+}
+void QVestaUpdater::onEnterUpdateReady() {
+    emit enterUpdateReady(getLatestVersion());
+    checkVestaRunning();
+}
+void QVestaUpdater::onEnterInstallBegin() {
+    emit enterInstallBegin(getLatestVersion());
+    doInstall();
+}
+void QVestaUpdater::onEnterWaitVestaExit() {
+    emit enterWaitVestaExit();
+}
+
+//----------------------------- Helpers ---------------------------------------
 void QVestaUpdater::checkStatus() {
     QDateTime dropboxVersion = checkLatestVersionInDropbox();
     if ( dropboxVersion > getInstalledVersion().addSecs(60) ) {
@@ -73,11 +98,6 @@ void QVestaUpdater::checkStatus() {
         emit upToDate(getInstalledVersion());
     }
     checkVestaRunning();
-}
-
-void QVestaUpdater::onUpToDate() {
-    checkStatus();
-    startTimer();
 }
 
 void QVestaUpdater::checkVestaRunning() {
@@ -107,7 +127,6 @@ void QVestaUpdater::doInstall() {
     QtConcurrent::run(this, &QVestaUpdater::installLatestVersionThread);
 }
 
-//----------------------------- Helpers ---------------------------------------
 void QVestaUpdater::installLatestVersionThread() {
     emit installStarted(getLatestVersion());
     // Вызываем скрипт, который должен
