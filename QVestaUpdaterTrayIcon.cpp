@@ -15,10 +15,13 @@ void QVestaUpdaterTrayIcon::setMenu(QMenu *menu) {
 //---------------------- Обработка сигналов VestaUpdater --------------------
 void QVestaUpdaterTrayIcon::onUpToDate(QDateTime dt) {
     setIconUpToDate();
+    trayIcon->setToolTip(
+        "Установлена последняя версия от " + dt.toString(kDateFormat));
 }
 
 void QVestaUpdaterTrayIcon::onInstallStarted(QDateTime dt) {
     setIconWaitForUpdate();
+    trayIcon->setToolTip("Идёт установка новой версии");
     trayIcon->showMessage("Начата установка",
                           "Версия от " + dt.toString(kDateFormat));
 }
@@ -31,6 +34,7 @@ void QVestaUpdaterTrayIcon::onInstallFinished(QDateTime dt) {
 
 void QVestaUpdaterTrayIcon::onWaitVestaExit() {
     setIconWaitForUpdate();
+    trayIcon->setToolTip("Ожидается закрытие Весты");
     trayIcon->showMessage("Ожидается закрытие Весты",
                           "Установка отложена");
 }
