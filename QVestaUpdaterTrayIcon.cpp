@@ -1,7 +1,7 @@
 #include "QVestaUpdaterTrayIcon.h"
 
 QVestaUpdaterTrayIcon::QVestaUpdaterTrayIcon(QObject *parent) :
-    QObject(parent)
+    QObject(parent), kDateFormat("dd.MM, hh:mm")
 {
     trayIcon = new QSystemTrayIcon(parent);
     setIconUpToDate();
@@ -20,12 +20,12 @@ void QVestaUpdaterTrayIcon::onUpToDate(QDateTime dt) {
 void QVestaUpdaterTrayIcon::onInstallStarted(QDateTime dt) {
     setIconWaitForUpdate();
     trayIcon->showMessage("Начата установка",
-                          "Версия от " + dt.toString());
+                          "Версия от " + dt.toString(kDateFormat));
 }
 
 void QVestaUpdaterTrayIcon::onInstallFinished(QDateTime dt) {
     trayIcon->showMessage("Установлена последняя версия",
-                          "Версия от " + dt.toString());
+                          "Версия от " + dt.toString(kDateFormat));
     onUpToDate(dt);
 }
 

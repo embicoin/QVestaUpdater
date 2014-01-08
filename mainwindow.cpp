@@ -11,6 +11,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    kDateTimeFormat("dd.MM, hh:mm"),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);    
@@ -72,18 +73,22 @@ void MainWindow::toggleVisibility() {
 }
 
 void MainWindow::initInterface() {
-    ui->installedVersionLabel->setText(vu.getInstalledVersion().toString());
-    ui->latestVersionLabel->setText(vu.getLatestVersion().toString());
+    ui->installedVersionLabel->setText(
+                vu.getInstalledVersion().toString(kDateTimeFormat));
+    ui->latestVersionLabel->setText(
+                vu.getLatestVersion().toString(kDateTimeFormat));
 }
 
 void MainWindow::onUpToDate() {
-    ui->installedVersionLabel->setText(vu.getInstalledVersion().toString());
+    ui->installedVersionLabel->setText(
+                vu.getInstalledVersion().toString(kDateTimeFormat));
     ui->statusLabel->setText(
                 "<p style=\"color:green\">Установлена последняя версия</p>");
 }
 
 void MainWindow::onUpdateReady() {
-    ui->latestVersionLabel->setText(vu.getLatestVersion().toString());
+    ui->latestVersionLabel->setText(
+                vu.getLatestVersion().toString(kDateTimeFormat));
     ui->statusLabel->setText(
                 "<p style=\"color:orange\">Доступно обновление</p>");
 }
