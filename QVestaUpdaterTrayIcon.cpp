@@ -4,12 +4,28 @@ QVestaUpdaterTrayIcon::QVestaUpdaterTrayIcon(QObject *parent) :
     QObject(parent), kDateFormat("dd.MM, hh:mm")
 {
     trayIcon = new QSystemTrayIcon(parent);
+		QObject::connect(
+			trayIcon, SIGNAL(activated			(QSystemTrayIcon::ActivationReason)), 
+			this,			SLOT  (onIconActivated(QSystemTrayIcon::ActivationReason))
+		);
+
     setIconUpToDate();
     trayIcon->show();
 }
 
 void QVestaUpdaterTrayIcon::setMenu(QMenu *menu) {
     trayIcon->setContextMenu(menu);
+}
+
+void QVestaUpdaterTrayIcon::
+	onIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+	switch (reason)
+	{
+	case QSystemTrayIcon::ActivationReason::DoubleClick:
+		emit iconDoubleClicked();
+		break;
+	}
 }
 
 //---------------------- Обработка сигналов VestaUpdater --------------------

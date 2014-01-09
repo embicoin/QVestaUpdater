@@ -194,6 +194,7 @@
     <property name="title">
      <string>Меню</string>
     </property>
+    <addaction name="startVestaAction"/>
     <addaction name="toggleWindowVisibilityAction"/>
     <addaction name="checkForNewVersionAction"/>
     <addaction name="exitAction"/>
@@ -218,6 +219,11 @@
   <action name="installNewVersionAction">
    <property name="text">
     <string>Установить новую версию</string>
+   </property>
+  </action>
+  <action name="startVestaAction">
+   <property name="text">
+    <string>Запустить Весту</string>
    </property>
   </action>
  </widget>

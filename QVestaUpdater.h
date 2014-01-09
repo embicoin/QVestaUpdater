@@ -40,6 +40,8 @@ public slots:
     void setLatestVersion(QDateTime);
     void setInstalledVersion(QDateTime);
 
+		void startVesta();
+
 signals:
 // Used by machine:
     void upToDate        (QDateTime version         );

@@ -152,6 +152,10 @@ QDateTime QVestaUpdater::checkLatestVersionInDropbox() {
     return fileInfo.lastModified();
 }
 
+void QVestaUpdater::startVesta() {
+	QProcess::startDetached("\"C:/Program Files (x86)/Vesta/Vesta.exe\"");
+}
+
 // ----------------------- Serialization ---------------------------------
 bool QVestaUpdater::serialize() {
     QFile file("settings.dat");

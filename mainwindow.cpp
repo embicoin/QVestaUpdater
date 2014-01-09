@@ -33,6 +33,8 @@ void MainWindow::performConnections() {
                      this, SLOT(toggleVisibility()) );
     QObject::connect(ui->checkForNewVersionAction, SIGNAL(triggered()),
                      &vu, SLOT(checkStatus()) );
+		QObject::connect(ui->startVestaAction, SIGNAL(triggered()),
+										 &vu, SLOT(startVesta()) );
 
     //---------------------- Кнопки ------------------------------
     QObject::connect(ui->checkLatestVersionButton, SIGNAL(clicked()),
@@ -47,6 +49,9 @@ void MainWindow::performConnections() {
                      trayIcon,  SLOT  (onInstallFinished (QDateTime))    );
     QObject::connect(&vu,       SIGNAL(enterWaitVestaExit(         )),
                      trayIcon,  SLOT  (onWaitVestaExit   (         ))    );
+		QObject::connect(
+			trayIcon,							SIGNAL(iconDoubleClicked()),
+			ui->startVestaAction, SIGNAL(triggered					()) );
 
     //----------------- Обработка сигналов QVestaUpdater --------------------
     QObject::connect(&vu,       SIGNAL(enterUpToDate     (QDateTime)),

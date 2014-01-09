@@ -13,7 +13,7 @@ public:
     explicit QVestaUpdaterTrayIcon(QObject *parent = 0);
 
 signals:
-
+	void iconDoubleClicked();
 public slots:
     void setMenu(QMenu*);
     void onUpToDate(QDateTime);
@@ -26,6 +26,8 @@ private:
     QSystemTrayIcon *trayIcon;
     void setIconUpToDate();
     void setIconWaitForUpdate();
+private slots:
+	void onIconActivated(QSystemTrayIcon::ActivationReason reason);
 };
 
 #endif // QVESTAUPDATERTRAYICON_H
