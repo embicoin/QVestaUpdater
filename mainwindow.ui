@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>438</width>
+    <width>594</width>
     <height>258</height>
    </rect>
   </property>
@@ -171,7 +171,7 @@
          </attribute>
          <layout class="QGridLayout" name="gridLayout_4">
           <item row="0" column="0">
-           <widget class="QTextBrowser" name="textBrowser"/>
+           <widget class="QTextEdit" name="historyText"/>
           </item>
          </layout>
         </widget>
@@ -186,7 +186,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>438</width>
+     <width>594</width>
      <height>26</height>
     </rect>
    </property>
