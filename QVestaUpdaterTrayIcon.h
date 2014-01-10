@@ -14,6 +14,7 @@ public:
 
 signals:
 	void iconDoubleClicked();
+	void balloonClicked();
 public slots:
     void setMenu(QMenu*);
     void onUpToDate(QDateTime);

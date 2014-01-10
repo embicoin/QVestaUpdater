@@ -29,6 +29,7 @@ private slots:
     void onInstallStarted();
     void onVestaRunning();
     void onVestaNotRunning();
+		void onBalloonClicked();
 
 private:
     void performConnections();

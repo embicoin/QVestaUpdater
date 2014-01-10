@@ -52,6 +52,9 @@ void MainWindow::performConnections() {
 		QObject::connect(
 			trayIcon,							SIGNAL(iconDoubleClicked()),
 			ui->startVestaAction, SIGNAL(triggered					()) );
+		QObject::connect(
+			trayIcon,							SIGNAL(balloonClicked   ()),
+			this,									SLOT  (onBalloonClicked	()) );
 
     //----------------- Обработка сигналов QVestaUpdater --------------------
     QObject::connect(&vu,       SIGNAL(enterUpToDate     (QDateTime)),
@@ -91,6 +94,11 @@ void MainWindow::initInterface() {
 		else {
 			ui->historyText->setPlainText( file.readAll() 	);
 		}
+}
+
+void MainWindow::onBalloonClicked() {
+	this->show();
+	ui->tabWidget->setCurrentWidget(ui->tabSvn);
 }
 
 void MainWindow::onUpToDate() {

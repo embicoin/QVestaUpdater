@@ -8,6 +8,10 @@ QVestaUpdaterTrayIcon::QVestaUpdaterTrayIcon(QObject *parent) :
 			trayIcon, SIGNAL(activated			(QSystemTrayIcon::ActivationReason)), 
 			this,			SLOT  (onIconActivated(QSystemTrayIcon::ActivationReason))
 		);
+		QObject::connect(
+			trayIcon, SIGNAL(messageClicked()), 
+			this,			SIGNAL(balloonClicked())
+		);
 
     setIconUpToDate();
     trayIcon->show();
