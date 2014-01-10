@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QFile>
 #include <QUrl>
+#include <QTextStream>
 #include "QVestaUpdaterTrayIcon.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -86,14 +87,18 @@ void MainWindow::initInterface() {
                 vu.getInstalledVersion().toString(kDateTimeFormat));
     ui->latestVersionLabel->setText(
                 vu.getLatestVersion().toString(kDateTimeFormat));
-		
-		QFile file("VestaDizLite/svn.history.txt");
-		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			ui->historyText->setPlainText("Can't open history file");
-		}
-		else {
-			ui->historyText->setPlainText( file.readAll() 	);
-		}
+		fillSvnHistoryText();
+}
+
+void MainWindow::fillSvnHistoryText() {
+	QFile file("VestaDizLite/svn.history.txt");
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {	
+		ui->historyText->setPlainText("Can't open history file");
+	}
+	else {
+		QTextStream stream(&file);
+		ui->historyText->setPlainText( stream.readAll() 	);
+	}
 }
 
 void MainWindow::onBalloonClicked() {
@@ -106,6 +111,7 @@ void MainWindow::onUpToDate() {
                 vu.getInstalledVersion().toString(kDateTimeFormat));
     ui->statusLabel->setText(
                 "<p style=\"color:green\">Установлена последняя версия</p>");
+		fillSvnHistoryText();
 }
 
 void MainWindow::onUpdateReady() {

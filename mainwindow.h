@@ -30,8 +30,10 @@ private slots:
     void onVestaRunning();
     void onVestaNotRunning();
 		void onBalloonClicked();
+		
 
 private:
+	void fillSvnHistoryText();
     void performConnections();
     const QString kDateTimeFormat;
 
